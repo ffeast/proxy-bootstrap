@@ -1,0 +1,20 @@
+---
+- name: add networking aliases
+  template: src=ifcfg dest="/etc/sysconfig/network-scripts/ifcfg-eth0:{{ item.0 }}"
+  with_indexed_items: "{{ provided_proxies.split(',') }}"
+  when: item.0 > 0
+  register: network_aliases
+  notify: restart network
+
+- name: install 3proxy
+  yum:
+    name=3proxy
+   state=latest
+
+- name: 3proxy config
+  template: src=3proxy.cfg dest=/etc/3proxy.cfg owner=root group=root mode=0500
+  notify:
+    - restart 3proxy
+
+- name: 3proxy is running
+  service: name=3proxy state=started enabled=yes

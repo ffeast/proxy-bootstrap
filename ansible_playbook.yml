@@ -1,0 +1,13 @@
+---
+- hosts: proxies
+  remote_user: root
+  roles:
+    - geerlingguy.repo-epel
+    - bootstrap
+    - 3proxy
+
+- hosts: services
+  remote_user: root
+  roles:
+    - geerlingguy.repo-epel
+    - bootstrap

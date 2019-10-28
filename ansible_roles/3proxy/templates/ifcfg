@@ -1,0 +1,4 @@
+DEVICE="eth0:{{ item.0 }}"
+BOOTPROTO="static"
+ONBOOT="yes"
+IPADDR="{{ item.1 }}"

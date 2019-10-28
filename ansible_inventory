@@ -1,0 +1,32 @@
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file=PATH_TO_YOUR_LOCAL_PRIVATE_KEY
+; zabbix server to monitor the proxy network
+zabbix_server=zabbix_server_hostname.example.com
+; port to run zabbix agent on
+zabbix_agent_listenport=10050
+
+[proxies]
+; servers charged with IP addresses in your hosting panel
+server_with_proxies_1.example.com provided_proxies=IP_11,IP_12...IP_1N
+server_with_proxies_2.example.com provided_proxies=IP_21,IP_22...IP_2K
+; ...
+; server_with_proxies_N.example.com provided_proxies=IP_N1,IP_N2...IP_NM
+
+[services]
+; services to be boostraped to use proxy servers
+; would initialize the server and configure firewalling between
+; the service and proxy servers
+master_hostname_to_be_using_proxy.example.com
+
+[proxies:vars]
+; hostnames to open ports for (hostname would be resolved into ip automatically)
+trusted_hosts=trusted_host11.example.com,trusted_host12.example.com
+; port to run sock5 proxies on
+socks_proxy_port=3128
+; port to run http proxies on
+http_proxy_port=8080
+
+[services:vars]
+; hostnames to open ports on the service box for
+trusted_hosts=trusted_host21.example.com,trusted_host22.example.com

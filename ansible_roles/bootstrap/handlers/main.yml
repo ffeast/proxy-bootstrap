@@ -1,0 +1,7 @@
+---
+# handlers file for bootstrap
+- name: restart iptables
+  service: name=iptables state=restarted
+
+- name: restart zabbix agent
+  systemd: name=zabbix-agent state=restarted

@@ -1,0 +1,10 @@
+---
+- name: restart 3proxy
+  service: name=3proxy state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted
+
+- name: restart network
+  service: name=network state=restarted
+  when: network_aliases.changed

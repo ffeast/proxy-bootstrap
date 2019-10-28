@@ -1,0 +1,59 @@
+---
+- name: install basic dependencies
+  yum: name={{ item }} state=latest
+  with_items:
+  - fail2ban
+  - zabbix22-agent
+  - telnet
+  - iptables-services
+
+- name: stop firewalld
+  systemd: name=firewalld state=stopped enabled=false
+
+- name: iptables configuration file
+  template:
+    src: iptables
+    dest: /etc/sysconfig/iptables
+    owner: root
+    group: root
+    mode: 0500
+  notify:
+    - restart iptables
+  tags:
+    - iptables
+
+- name: bringing up iptables
+  service: name=iptables enabled=yes state=started
+
+- name: zabbix configuration file
+  template:
+    src: zabbix_agentd.conf
+    dest: /etc/zabbix_agentd.conf
+    owner: zabbix
+    group: zabbix
+    mode: 0500
+  notify:
+    - restart zabbix agent
+
+- name: enable helper services
+  systemd: name={{ item }} enabled=yes state=started
+  with_items:
+  - fail2ban
+  - zabbix-agent
+
+- name: create swap space
+  command: dd if=/dev/zero of=/extraswap bs=1M count=512
+  when: ansible_swaptotal_mb < 1
+
+- name: make swap
+  command: mkswap /extraswap
+  when: ansible_swaptotal_mb < 1
+
+- name: add to fstab
+  action: lineinfile dest=/etc/fstab regexp="extraswap" line="/extraswap none swap sw 0 0" state=present
+
+- name: turn swap on
+  command: swapon -a
+
+- name: set swapiness
+  shell: echo 0 | sudo tee /proc/sys/vm/swappiness
