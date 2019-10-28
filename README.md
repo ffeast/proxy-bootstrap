@@ -4,7 +4,8 @@
 This is an ansible playbook to quickly bring up a network of private proxy servers spread across multipe hosting providers
 
 ## Architecture
-TBD
+![proxy network architecture](https://raw.githubusercontent.com/ffeast/proxy-bootstrap/master/images/proxy-bootstrap.png)
+
 ### Technical details
  - `centos6` is used as an operating system
  - [3proxy](https://github.com/z3APA3A/3proxy) is used as a socks/http proxy server
